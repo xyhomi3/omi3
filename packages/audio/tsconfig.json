@@ -1,0 +1,11 @@
+{
+  "extends": "@omi3/typescript/base",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./dist",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["jest", "node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*.test.ts", "jest.config.ts", "__tests__"]
+}

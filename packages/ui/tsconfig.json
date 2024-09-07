@@ -1,0 +1,12 @@
+{
+  "extends": "@omi3/typescript/nextjs",
+  "include": ["."],
+
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "exclude": ["dist", "build", "node_modules"]
+}

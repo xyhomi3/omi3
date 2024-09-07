@@ -1,0 +1,27 @@
+{
+  "name": "omi3",
+  "description": "omi3 monorepo",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "packageManager": "pnpm@9.1.1",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.27.8",
+    "@manypkg/cli": "^0.21.4",
+    "@omi3/typescript": "workspace:*",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.6.5",
+    "turbo": "latest",
+    "typescript": "^5.4.5"
+  }
+}

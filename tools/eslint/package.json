@@ -1,0 +1,32 @@
+{
+  "name": "@omi3/eslint",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "exports": {
+    "./next.js": "./next.js",
+    "./react.js": "./react.js",
+    "./library.js": "./library.js"
+  },
+  "files": [
+    "next.js",
+    "react.js",
+    "library.js",
+    "README.md",
+    ".eslintrc.js"
+  ],
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-only-warn": "^1.1.0"
+  },
+  "devDependencies": {
+    "@vercel/style-guide": "latest",
+    "eslint": "^8.57.0",
+    "eslint-config-turbo": "latest"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "@omi3/ui",
+  "description": "Omi3 UI components",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "lU",
+    "url": "https://github.com/xyhomi3"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "types": "./src/index.ts",
+  "module": "./src/index.ts",
+  "main": "./src/index.ts",
+  "exports": {
+    "./neobrutalism.css": "./src/styles/neobrutalism.css",
+    "./shadcn.css": "./src/styles/shadcn.css",
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src"
+  },
+  "peerDependencies": {
+    "next": "^14.2.5",
+    "react": "^18.3.0"
+  },
+  "devDependencies": {
+    "@omi3/eslint": "workspace:*",
+    "@omi3/tailwind": "workspace:*",
+    "@omi3/typescript": "workspace:*",
+    "@omi3/utils": "workspace:*",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "next": "14.2.8",
+    "postcss": "^8.4.35",
+    "react": "^18.3.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@radix-ui/react-progress": "^1.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0"
+  }
+}
