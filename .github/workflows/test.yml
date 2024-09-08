@@ -4,24 +4,26 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
       - uses: pnpm/action-setup@v2
         with:
           version: 9.1.1
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Install Playwright
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Install playwright browsers
         run: pnpm exec playwright install --with-deps
-      - name: Build
+      - name: Build packages
         run: pnpm build
       - name: Run tests
         run: pnpm test

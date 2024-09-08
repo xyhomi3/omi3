@@ -3,14 +3,6 @@
   "version": "0.0.0",
   "description": "Web Audio API",
   "license": "Apache-2.0",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md"
-  ],
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
@@ -19,6 +11,37 @@
     "test": "jest",
     "prepublishOnly": "pnpm run build"
   },
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "files": [
+    "dist/**",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": {
+    "name": "Omi3",
+    "url": "https://github.com/xyhomi3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xyhomi3/omi3.git"
+  },
+  "homepage": "https://github.com/xyhomi3/omi3/tree/main/packages/audio#readme",
+  "bugs": {
+    "url": "https://github.com/xyhomi3/omi3/issues"
+  },
+  "keywords": [
+    "audio",
+    "web audio api",
+    "audio library",
+    "audio processing",
+    "audio playback"
+  ],
   "devDependencies": {
     "@omi3/eslint": "workspace:*",
     "@omi3/tsup": "workspace:*",

@@ -1,12 +1,16 @@
 # Use a base image with pnpm pre-installed
 FROM node:18-alpine AS base
 RUN npm install -g pnpm turbo
+ARG TURBO_TOKEN
+ARG TURBO_TEAM
 
 # Build stage
 FROM base AS builder
 RUN apk update && apk add --no-cache libc6-compat
 WORKDIR /app
 COPY . .
+ENV TURBO_TOKEN=$TURBO_TOKEN
+ENV TURBO_TEAM=$TURBO_TEAM
 RUN turbo prune @omi3/site --docker
 
 # Install and build stage
