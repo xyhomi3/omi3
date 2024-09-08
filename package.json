@@ -8,17 +8,18 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
+    "clean": "turbo clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clean": "turbo clean && rm -rf node_modules"
+    "changeset": "changeset",
+    "release": "turbo build lint test && changeset publish"
   },
   "packageManager": "pnpm@9.1.1",
   "engines": {
     "node": ">=18"
   },
-  "dependencies": {
+  "devDependencies": {
     "@changesets/cli": "^2.27.8",
     "@manypkg/cli": "^0.21.4",
-    "@omi3/typescript": "workspace:*",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "turbo": "latest",

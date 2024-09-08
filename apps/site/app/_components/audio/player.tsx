@@ -4,8 +4,8 @@ import { Button, Card, CardContent, CardHeader, CardTitle, Progress } from '@omi
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { AudioChannel } from '@omi3/audio';
-import AudioVisualizer from './visualizer';
 import { playtime } from '@omi3/utils';
+import AudioVisualizer from './visualizer';
 
 const sampleMusic = {
   url: 'https://cdn.pixabay.com/audio/2023/12/29/audio_a1497a53af.mp3',
@@ -65,17 +65,20 @@ export function AudioPlayer() {
   }, [audioChannel, isPlaying]);
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full">
       <CardHeader className="text-center">
         <CardTitle>
           Omi<span className="text-main">3</span> Player
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <AudioVisualizer analyser={analyser} width={300} height={150} />
+        <div className="w-full">
+          <AudioVisualizer analyser={analyser} width={300} height={150} />
+        </div>
         <Progress value={(currentTime / duration) * 100} className="mt-4" />
-        <div className="text-text mt-2 w-full text-sm">
-          {playtime(currentTime)} / {playtime(duration)}
+        <div className="text-text mt-2 w-full text-sm flex justify-between">
+          <span>{playtime(currentTime)}</span>
+          <span>{playtime(duration)}</span>
         </div>
         <Button onClick={handlePlayPause} className="mt-4 w-full">
           {isPlaying ? 'Pause' : 'Lecture'}

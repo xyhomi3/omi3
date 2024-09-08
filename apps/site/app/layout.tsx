@@ -19,9 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn(silk.variable, 'font-silk antialiased flex flex-col min-h-screen')}>
-        <main className="flex-grow flex items-center justify-center">
+    <html lang="en" className="h-full">
+      <body className={cn(silk.variable, 'font-silk antialiased flex flex-col min-h-full')}>
+        <main className="flex-grow flex items-center justify-center p-5">
           {children}
         </main>
         <Footer />
