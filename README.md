@@ -1,9 +1,11 @@
 <div align="center">
   <img src="./logo.svg" alt="Logo Omi3"/>
 
-  <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/build.yml?branch=main&label=build" alt="Build Status"/>
-  <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/test.yml?branch=main&label=test" alt="Test"/>
-  <img src="https://img.shields.io/github/repo-size/xyhomi3/omi3" alt="Repo Size"/>
+  <p align="center">
+    <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/build.yml?branch=main&label=build" alt="Build Status"/>
+    <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/test.yml?branch=main&label=test" alt="Test"/>
+    <img src="https://img.shields.io/github/repo-size/xyhomi3/omi3" alt="Repo Size"/>
+  </p>
 </div>
 
 ---
