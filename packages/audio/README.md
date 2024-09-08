@@ -1,4 +1,5 @@
 # `@omi3/audio`
+![Version](https://img.shields.io/github/package-json/v/xyhomi3/omi3?filename=packages%2Faudio%2Fpackage.json)
 
 A flexible audio management library for web applications.
 
