@@ -7,11 +7,11 @@ on:
   pull_request:
     branches: [main]
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write
-  packages: write
-  id-token: write
+  pull-requests: write
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
