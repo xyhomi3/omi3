@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "dev"]
     tags: ["v*.*.*"]
   pull_request:
     branches: ["main"]
@@ -37,6 +37,7 @@ jobs:
 
       - name: Create Release Pull Request or Publish to npm
         uses: changesets/action@v1
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
         with:
           publish: pnpm release
         env:
