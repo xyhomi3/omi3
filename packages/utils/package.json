@@ -1,9 +1,8 @@
 {
   "name": "@omi3/utils",
   "description": "Reusable constants and utility functions",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
-
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
@@ -13,7 +12,6 @@
     "pretest": "pnpm build",
     "test": "jest"
   },
-
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
