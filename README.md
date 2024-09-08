@@ -6,6 +6,7 @@
     <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/test.yml?branch=main&label=test" alt="Test"/>
     <img src="https://img.shields.io/github/repo-size/xyhomi3/omi3" alt="Repo Size"/>
   </p>
+  
 </div>
 
 ---
@@ -60,3 +61,7 @@ We welcome contributions from the community! Please read our [Contributing Guide
 ## License
 
 `Omi3` is open-source software licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+<a href="https://www.producthunt.com/products/omi3?utm_source=badge-follow&utm_medium=badge&utm_souce=badge-omi3" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/follow.svg?product_id=605303&theme=light" alt="Omi3 - Audio&#0032;processing&#0032;and&#0032;playback&#0032;capabilities&#0032;for&#0032;web&#0046; | Product Hunt" width="128" height="32" /></a>
