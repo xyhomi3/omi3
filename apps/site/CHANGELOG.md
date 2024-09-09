@@ -1,5 +1,11 @@
 # @omi3/site
 
+## 0.0.5
+
+### Patch Changes
+
+- a9e2c60: add og-image.tsx
+
 ## 0.0.4
 
 ### Patch Changes
