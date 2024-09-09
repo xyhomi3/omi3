@@ -3,6 +3,7 @@
   "description": "Omi3 UI components",
   "version": "0.0.1",
   "license": "MIT",
+  "private": true,
   "author": {
     "name": "lU",
     "url": "https://github.com/xyhomi3"
