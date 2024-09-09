@@ -3,5 +3,7 @@ module.exports = {
   root: true,
   extends: [require.resolve('@omi3/eslint/react.js')],
   parser: '@typescript-eslint/parser',
-  globals: true
+  rules: {
+    'no-undef': 'off',
+  },
 };
