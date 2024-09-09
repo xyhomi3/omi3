@@ -38,7 +38,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: changesets/action@v1
         with:
-          version: pnpm changeset version
+          version: pnpm version-packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "node ./.next/standalone/apps/site/server.js",
+    "start": "next start",
     "clean": "rm -rf .next .turbo node_modules",
     "lint": "next lint",
     "test": "playwright test"
