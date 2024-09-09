@@ -1,5 +1,12 @@
 # @omi3/site
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [ecb66e7]
+  - @omi3/ui@0.0.1
+
 ## 0.0.2
 
 ### Patch Changes
