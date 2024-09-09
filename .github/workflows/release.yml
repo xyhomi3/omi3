@@ -35,9 +35,17 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Create Release Pull Request or Publish to npm
+      - name: Create Release Pull Request
         uses: changesets/action@v1
-        if: github.ref == 'refs/heads/main'
+        if: github.event_name == 'pull_request'
+        with:
+          version: pnpm version-packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        uses: changesets/action@v1
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           publish: pnpm release
         env:
