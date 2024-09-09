@@ -1,5 +1,14 @@
 # @omi3/site
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [a2895a9]
+  - @omi3/ui@0.0.2
+  - @omi3/audio@0.0.2
+  - @omi3/utils@0.0.2
+
 ## 0.0.3
 
 ### Patch Changes
