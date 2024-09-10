@@ -11,7 +11,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
-  })
+  }),
 ) as jest.Mock;
 
 describe('AudioChannel', () => {
@@ -157,5 +157,4 @@ describe('AudioChannel', () => {
     const instance2 = AudioChannel.getInstance(mockEventHandler);
     expect(instance1).toBe(instance2);
   });
-
 });
