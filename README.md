@@ -5,9 +5,7 @@
     <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/build.yml?branch=main&label=build" alt="Build Status"/>
     <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/test.yml?branch=main&label=test" alt="Test"/>
     <img src="https://img.shields.io/github/repo-size/xyhomi3/omi3" alt="Repo Size"/>
-    <img alt="NPM" src="https://img.shields.io/npm/v/@omi3/audio?color=red&label=npm&logo=npm&logoColor=red"/>
   </p>
-  
 </div>
 
 ---
