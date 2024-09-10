@@ -5,6 +5,7 @@
     <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/build.yml?branch=main&label=build" alt="Build Status"/>
     <img src="https://img.shields.io/github/actions/workflow/status/xyhomi3/omi3/test.yml?branch=main&label=test" alt="Test"/>
     <img src="https://img.shields.io/github/repo-size/xyhomi3/omi3" alt="Repo Size"/>
+    <img alt="NPM" src="https://img.shields.io/npm/v/@omi3/audio?color=red&label=npm&logo=npm&logoColor=red"/>
   </p>
   
 </div>
@@ -66,4 +67,4 @@ We welcome contributions from the community! Please read our [Contributing Guide
 
 ---
 
-<a href="https://www.producthunt.com/products/omi3?utm_source=badge-follow&utm_medium=badge&utm_souce=badge-omi3" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/follow.svg?product_id=605303&theme=light" alt="Omi3 - Audio&#0032;processing&#0032;and&#0032;playback&#0032;capabilities&#0032;for&#0032;web&#0046; | Product Hunt" width="128" height="32" /></a>
+<a href="https://www.producthunt.com/posts/omi3?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-omi3" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=487676&theme=light" alt="Omi3 - Audio&#0032;processing&#0032;and&#0032;playback&#0032;capabilities&#0032;for&#0032;web&#0046; | Product Hunt" width="256" height="64" /></a>

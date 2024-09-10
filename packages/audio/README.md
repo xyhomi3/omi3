@@ -1,5 +1,4 @@
 # `@omi3/audio`
-![Version](https://img.shields.io/github/package-json/v/xyhomi3/omi3?filename=packages%2Faudio%2Fpackage.json)
 
 A flexible audio management library for web applications.
 
@@ -29,7 +28,6 @@ pnpm add @omi3/audio
 
 Here's a basic example of how to use the library:
 
-
 ```ts
 import { AudioChannel, EventHandler, Music } from '@omi3/audio';
 
@@ -53,7 +51,6 @@ await audioChannel.play();
 }
 playAudio();
 ```
-
 
 ## API Reference
 
@@ -110,7 +107,6 @@ url: string;
 }
 ```
 
-
 ## Advanced Usage
 
 ### Audio Analysis
@@ -141,7 +137,6 @@ sampleRate: 44100,
 const audioChannel = new AudioChannel(eventHandler, customAudioContextFactory);
 ```
 
-
 ## Browser Compatibility
 
 This library uses the Web Audio API, which is supported in all modern browsers. For older browsers, consider using a polyfill or fallback solution.
@@ -152,4 +147,10 @@ Contributions are welcome! Please read our contributing guidelines and code of c
 
 ## License
 
-This project is licensed under Apache-2.0 - see the [LICENSE](LICENSE) file for details.
+This package is licensed under Apache-2.0 - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<img alt="NPM" src="https://img.shields.io/npm/v/%40omi3%2Faudio?color=red&label=npm&logo=npm&logoColor=red">
+<img alt="NPM Downloads" src="https://img.shields.io/npm/dm/%40omi3%2Faudio">
+<img alt="NPM Unpacked Size" src="https://img.shields.io/npm/unpacked-size/%40omi3%2Faudio">
