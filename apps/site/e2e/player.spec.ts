@@ -15,7 +15,7 @@ test.describe.parallel('Player page', () => {
 
     const mainElement = page.locator('main');
     await expect(mainElement).toBeVisible();
-    await expect(mainElement).toHaveClass(/flex-grow flex items-center justify-center/);
+    await expect(mainElement).toHaveClass(/flex flex-grow items-center justify-center/);
 
     const audioPlayer = page.locator('div.rounded-base.border-2').first();
     await expect(audioPlayer).toBeVisible({ timeout: 10000 });
