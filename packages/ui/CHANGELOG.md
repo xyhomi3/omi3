@@ -1,13 +1,13 @@
-# @omi3/tsup
+# @omi3/ui
 
 ## 0.0.2
 
 ### Patch Changes
 
-- 537f255: .
+- a2895a9: .
 
 ## 0.0.1
 
 ### Patch Changes
 
-- 203f78f: init changeset
+- ecb66e7: .

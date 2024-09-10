@@ -1,7 +1,7 @@
 {
   "name": "@omi3/tsup",
   "description": "Tsup configuration",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "author": {
     "name": "Omi3",
