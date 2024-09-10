@@ -76,7 +76,7 @@ export function AudioPlayer() {
           <AudioVisualizer analyser={analyser} width={300} height={150} />
         </div>
         <Progress value={(currentTime / duration) * 100} className="mt-4" />
-        <div className="text-text mt-2 w-full text-sm flex justify-between">
+        <div className="text-text mt-2 flex w-full justify-between text-sm">
           <span>{playtime(currentTime)}</span>
           <span>{playtime(duration)}</span>
         </div>

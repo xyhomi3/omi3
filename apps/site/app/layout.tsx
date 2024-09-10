@@ -20,10 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full">
-      <body className={cn(silk.variable, 'font-silk antialiased flex flex-col min-h-full')}>
-        <main className="flex-grow flex items-center justify-center p-5">
-          {children}
-        </main>
+      <body className={cn(silk.variable, 'font-silk flex min-h-full flex-col antialiased')}>
+        <main className="flex flex-grow items-center justify-center p-5">{children}</main>
         <Footer />
       </body>
     </html>

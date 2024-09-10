@@ -18,7 +18,7 @@ const baseConfig: Omit<Config, 'content'> = {
     },
     extend: {
       borderRadius: {
-        base: '5px'
+        base: '5px',
       },
       boxShadow: {
         light: '4px 4px 0px 0px #000',
@@ -60,7 +60,7 @@ const styles: Record<'neobrutalism' | 'shadcn', StyleConfig> = {
       darkText: '#eeefe9',
       darkBorder: '#000',
       secondaryBlack: '#1b1b1b', // opposite of plain white, not used pitch black because borders and box-shadows are that color
-    }
+    },
   },
   shadcn: {
     borderRadius: {

@@ -3,6 +3,7 @@
 </div>
 
 ---
+
 We're thrilled that you're interested in contributing to `Omi3`! This document provides guidelines for contributing to the project.
 
 ## Code of Conduct

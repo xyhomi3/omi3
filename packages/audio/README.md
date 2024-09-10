@@ -1,4 +1,5 @@
 # `@omi3/audio`
+
 ![Version](https://img.shields.io/github/package-json/v/xyhomi3/omi3?filename=packages%2Faudio%2Fpackage.json)
 
 A flexible audio management library for web applications.
@@ -29,7 +30,6 @@ pnpm add @omi3/audio
 
 Here's a basic example of how to use the library:
 
-
 ```ts
 import { AudioChannel, EventHandler, Music } from '@omi3/audio';
 
@@ -53,7 +53,6 @@ await audioChannel.play();
 }
 playAudio();
 ```
-
 
 ## API Reference
 
@@ -87,13 +86,13 @@ An interface for handling audio events.
 
 ```typescript
 interface EventHandler {
-onPlay?: () => void;
-onPause?: () => void;
-onEnded?: () => void;
-onTimeUpdate?: (time: number) => void;
-onDurationChange?: (duration: number) => void;
-onError?: (error: Error) => void;
-onAnalyserCreated?: (analyser: AnalyserNode) => void;
+  onPlay?: () => void;
+  onPause?: () => void;
+  onEnded?: () => void;
+  onTimeUpdate?: (time: number) => void;
+  onDurationChange?: (duration: number) => void;
+  onError?: (error: Error) => void;
+  onAnalyserCreated?: (analyser: AnalyserNode) => void;
 }
 ```
 
@@ -102,14 +101,12 @@ onAnalyserCreated?: (analyser: AnalyserNode) => void;
 A simple interface for representing music data.
 
 ```typescript
-
 interface Music {
-id: string;
-name: string;
-url: string;
+  id: string;
+  name: string;
+  url: string;
 }
 ```
-
 
 ## Advanced Usage
 
@@ -119,10 +116,10 @@ The `AudioChannel` class provides access to an `AnalyserNode` for audio visualiz
 
 ```typescript
 const eventHandler: EventHandler = {
-onAnalyserCreated: (analyser: AnalyserNode) => {
-// Use the analyser node for visualizations or further audio processing
-console.log('Analyser created:', analyser);
-},
+  onAnalyserCreated: (analyser: AnalyserNode) => {
+    // Use the analyser node for visualizations or further audio processing
+    console.log('Analyser created:', analyser);
+  },
 };
 const audioChannel = new AudioChannel(eventHandler);
 ```
@@ -133,14 +130,13 @@ You can provide a custom audio context factory to the `AudioChannel` constructor
 
 ```typescript
 const customAudioContextFactory = () => {
-return new (window.AudioContext || (window as any).webkitAudioContext)({
-latencyHint: 'interactive',
-sampleRate: 44100,
-});
+  return new (window.AudioContext || (window as any).webkitAudioContext)({
+    latencyHint: 'interactive',
+    sampleRate: 44100,
+  });
 };
 const audioChannel = new AudioChannel(eventHandler, customAudioContextFactory);
 ```
-
 
 ## Browser Compatibility
 
