@@ -12,13 +12,13 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "turbo build lint test && changeset publish"
+    "release": "turbo build lint && changeset publish"
   },
   "packageManager": "pnpm@9.1.1",
   "engines": {
     "node": ">=18"
   },
-  "dependencies": {
+  "devDependencies": {
     "@changesets/cli": "^2.27.8",
     "@manypkg/cli": "^0.21.4",
     "prettier": "^3.2.5",

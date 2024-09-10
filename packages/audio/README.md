@@ -1,7 +1,5 @@
 # `@omi3/audio`
 
-![Version](https://img.shields.io/github/package-json/v/xyhomi3/omi3?filename=packages%2Faudio%2Fpackage.json)
-
 A flexible audio management library for web applications.
 
 ## Features
@@ -86,13 +84,13 @@ An interface for handling audio events.
 
 ```typescript
 interface EventHandler {
-  onPlay?: () => void;
-  onPause?: () => void;
-  onEnded?: () => void;
-  onTimeUpdate?: (time: number) => void;
-  onDurationChange?: (duration: number) => void;
-  onError?: (error: Error) => void;
-  onAnalyserCreated?: (analyser: AnalyserNode) => void;
+onPlay?: () => void;
+onPause?: () => void;
+onEnded?: () => void;
+onTimeUpdate?: (time: number) => void;
+onDurationChange?: (duration: number) => void;
+onError?: (error: Error) => void;
+onAnalyserCreated?: (analyser: AnalyserNode) => void;
 }
 ```
 
@@ -101,10 +99,11 @@ interface EventHandler {
 A simple interface for representing music data.
 
 ```typescript
+
 interface Music {
-  id: string;
-  name: string;
-  url: string;
+id: string;
+name: string;
+url: string;
 }
 ```
 
@@ -116,10 +115,10 @@ The `AudioChannel` class provides access to an `AnalyserNode` for audio visualiz
 
 ```typescript
 const eventHandler: EventHandler = {
-  onAnalyserCreated: (analyser: AnalyserNode) => {
-    // Use the analyser node for visualizations or further audio processing
-    console.log('Analyser created:', analyser);
-  },
+onAnalyserCreated: (analyser: AnalyserNode) => {
+// Use the analyser node for visualizations or further audio processing
+console.log('Analyser created:', analyser);
+},
 };
 const audioChannel = new AudioChannel(eventHandler);
 ```
@@ -130,10 +129,10 @@ You can provide a custom audio context factory to the `AudioChannel` constructor
 
 ```typescript
 const customAudioContextFactory = () => {
-  return new (window.AudioContext || (window as any).webkitAudioContext)({
-    latencyHint: 'interactive',
-    sampleRate: 44100,
-  });
+return new (window.AudioContext || (window as any).webkitAudioContext)({
+latencyHint: 'interactive',
+sampleRate: 44100,
+});
 };
 const audioChannel = new AudioChannel(eventHandler, customAudioContextFactory);
 ```
@@ -148,4 +147,12 @@ Contributions are welcome! Please read our contributing guidelines and code of c
 
 ## License
 
-This project is licensed under Apache-2.0 - see the [LICENSE](LICENSE) file for details.
+This package is licensed under Apache-2.0 - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div>
+  <img alt="NPM" src="https://img.shields.io/npm/v/%40omi3%2Faudio?color=red&label=npm&logo=npm&logoColor=red">
+  <img alt="NPM Downloads" src="https://img.shields.io/npm/dm/%40omi3%2Faudio">
+  <img alt="NPM Unpacked Size" src="https://img.shields.io/npm/unpacked-size/%40omi3%2Faudio">
+</div>
