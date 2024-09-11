@@ -1,0 +1,5 @@
+{
+  "extends": "@omi3/typescript/base",
+  "include": ["."],
+  "exclude": ["node_modules"]
+}
