@@ -31,8 +31,8 @@ export class AudioChannel {
   private gainNode: GainNode | null = null;
   private analyser: AnalyserNode | null = null;
   private audioBuffer: AudioBuffer | null = null;
-  private startTime: number = 0;
-  private pauseTime: number = 0;
+  private startAt: number = 0;
+  private pauseAt: number = 0;
   private isAudioPlaying: boolean = false;
   private animationFrame: number | null = null;
   private audioContextFactory: () => AudioContext | null;
@@ -42,18 +42,17 @@ export class AudioChannel {
    * @param eventHandler - The event handler for audio events.
    * @param audioContextFactory - Optional factory function for creating AudioContext.
    */
-  private constructor(
-    eventHandler: EventHandler,
-    audioContextFactory?: () => AudioContext | null
-  ) {
+  private constructor(eventHandler: EventHandler, audioContextFactory?: () => AudioContext | null) {
     this.eventHandler = eventHandler;
-    this.audioContextFactory = audioContextFactory || (() => {
-      if (typeof window !== 'undefined' && (window.AudioContext || (window as any).webkitAudioContext)) {
-        return new (window.AudioContext || (window as any).webkitAudioContext)();
-      }
-      console.error('AudioContext is not supported in this environment');
-      return null;
-    });
+    this.audioContextFactory =
+      audioContextFactory ||
+      (() => {
+        if (typeof window !== 'undefined' && (window.AudioContext || (window as any).webkitAudioContext)) {
+          return new (window.AudioContext || (window as any).webkitAudioContext)();
+        }
+        console.error('AudioContext is not supported in this environment');
+        return null;
+      });
   }
 
   /**
@@ -62,10 +61,7 @@ export class AudioChannel {
    * @param audioContextFactory - Optional factory function for creating AudioContext.
    * @returns The AudioChannel instance.
    */
-  public static getInstance(
-    eventHandler: EventHandler,
-    audioContextFactory?: () => AudioContext | null
-  ): AudioChannel {
+  public static getInstance(eventHandler: EventHandler, audioContextFactory?: () => AudioContext | null): AudioChannel {
     if (!AudioChannel.instance) {
       AudioChannel.instance = new AudioChannel(eventHandler, audioContextFactory);
     }
@@ -112,9 +108,10 @@ export class AudioChannel {
    */
   public async play(): Promise<void> {
     if (this.audioBuffer && this.audioContext) {
+      this.stop();
       this.createSourceNode();
-      this.sourceNode!.start(0, this.pauseTime);
-      this.startTime = this.audioContext.currentTime - this.pauseTime;
+      this.sourceNode!.start(0, this.pauseAt);
+      this.startAt = this.audioContext.currentTime - this.pauseAt;
       this.isAudioPlaying = true;
       this.playbackState = AudioChannel.PlaybackState.PLAYING;
       this.eventHandler.onPlay?.();
@@ -127,7 +124,7 @@ export class AudioChannel {
    */
   public pause(): void {
     if (this.isAudioPlaying) {
-      this.pauseTime = this.audioContext!.currentTime - this.startTime;
+      this.pauseAt = this.audioContext!.currentTime - this.startAt;
       this.stop();
       this.isAudioPlaying = false;
       this.playbackState = AudioChannel.PlaybackState.PAUSED;
@@ -141,14 +138,19 @@ export class AudioChannel {
    */
   public seek(time: number): void {
     const wasPlaying = this.isAudioPlaying;
-    this.stop();
-    this.pauseTime = Math.max(0, Math.min(time, this.audioBuffer?.duration || 0));
+    if (wasPlaying) {
+      this.pause();
+    }
+
+    this.pauseAt = Math.max(0, Math.min(time, this.audioBuffer?.duration || 0));
     if (wasPlaying) {
       this.play();
     } else {
-      this.eventHandler.onTimeUpdate?.(this.pauseTime);
+      this.eventHandler.onTimeUpdate?.(this.pauseAt);
     }
     this.eventHandler.onPlayStateChange?.(wasPlaying);
+
+    this.eventHandler.onSeek?.(this.pauseAt);
   }
 
   /**
@@ -254,7 +256,7 @@ export class AudioChannel {
    */
   private handlePlaybackEnded(): void {
     this.stop();
-    this.pauseTime = 0;
+    this.pauseAt = 0;
     this.playbackState = AudioChannel.PlaybackState.IDLE;
     this.eventHandler.onEnded?.();
   }
@@ -272,6 +274,7 @@ export class AudioChannel {
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
     }
+    this.isAudioPlaying = false;
     this.eventHandler.onStop?.();
   }
 
@@ -279,8 +282,8 @@ export class AudioChannel {
    * Updates the current playback time and triggers the onTimeUpdate event.
    */
   private updateTime(): void {
-    if (this.audioContext && this.startTime !== null && this.isAudioPlaying) {
-      const currentTime = this.audioContext.currentTime - this.startTime;
+    if (this.audioContext && this.startAt !== null && this.isAudioPlaying) {
+      const currentTime = this.audioContext.currentTime - this.startAt;
       if (currentTime <= (this.audioBuffer?.duration || 0)) {
         this.eventHandler.onTimeUpdate?.(currentTime);
         this.animationFrame = this.requestAnimationFrame(() => this.updateTime());

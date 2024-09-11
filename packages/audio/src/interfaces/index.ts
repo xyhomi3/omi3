@@ -23,6 +23,8 @@ export interface EventHandler {
   onAnalyserCreated?: (analyser: AnalyserNode) => void;
   /** Called when the play state changes */
   onPlayStateChange?: (isPlaying: boolean) => void;
+  /** Called when the audio is seeked */
+  onSeek?: (time: number) => void;
 }
 
 /**
