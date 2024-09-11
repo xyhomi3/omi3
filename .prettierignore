@@ -1,7 +1,0 @@
-node_modules
-coverage
-build
-.idea/
-.next/
-.turbo/
-dist/

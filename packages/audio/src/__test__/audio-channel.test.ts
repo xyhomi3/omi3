@@ -2,17 +2,43 @@ import { AudioChannel, AudioError, Music } from '../../dist';
 
 import { EventHandler } from '../interfaces';
 
-// Simuler requestAnimationFrame et cancelAnimationFrame
+// Mock requestAnimationFrame and cancelAnimationFrame
 global.requestAnimationFrame = (callback) => setTimeout(callback, 0);
 global.cancelAnimationFrame = (id) => clearTimeout(id);
 
-// Simuler fetch
+// Mock fetch
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
   }),
 ) as jest.Mock;
+
+// Mock window and AudioContext
+const mockCreateGain = jest.fn(() => ({
+  connect: jest.fn(),
+  gain: { setValueAtTime: jest.fn() },
+}));
+
+const mockCreateAnalyser = jest.fn(() => ({
+  connect: jest.fn(),
+  fftSize: 0,
+  smoothingTimeConstant: 0,
+}));
+
+const mockAudioContext = jest.fn(() => ({
+  createGain: mockCreateGain,
+  createAnalyser: mockCreateAnalyser,
+  currentTime: 0,
+  destination: { connect: jest.fn() },
+  resume: jest.fn().mockResolvedValue(undefined),
+  close: jest.fn().mockResolvedValue(undefined),
+}));
+
+// Modify window configuration
+(global as any).window = {
+  AudioContext: jest.fn().mockImplementation(mockAudioContext),
+};
 
 describe('AudioChannel', () => {
   let audioChannel: AudioChannel;
@@ -25,18 +51,20 @@ describe('AudioChannel', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-
+    // Mock GainNode
     mockGainNode = {
       connect: jest.fn(),
       gain: { setValueAtTime: jest.fn() },
+      disconnect: jest.fn(),
     } as unknown as GainNode;
-
+    // Mock AnalyserNode
     mockAnalyserNode = {
       connect: jest.fn(),
+      disconnect: jest.fn(),
       fftSize: 0,
       smoothingTimeConstant: 0,
     } as unknown as AnalyserNode;
-
+    // Mock AudioBufferSourceNode
     mockSourceNode = {
       buffer: null,
       connect: jest.fn(),
@@ -46,6 +74,7 @@ describe('AudioChannel', () => {
       onended: null,
     } as unknown as AudioBufferSourceNode;
 
+    // Mock AudioContext
     mockAudioContext = {
       createGain: jest.fn().mockReturnValue(mockGainNode),
       createAnalyser: jest.fn().mockReturnValue(mockAnalyserNode),
@@ -54,8 +83,10 @@ describe('AudioChannel', () => {
       destination: {} as AudioDestinationNode,
       resume: jest.fn().mockResolvedValue(undefined),
       currentTime: 0,
+      close: jest.fn().mockResolvedValue(undefined),
     } as unknown as AudioContext;
 
+    // Mock EventHandler
     mockEventHandler = {
       onAnalyserCreated: jest.fn(),
       onPlay: jest.fn(),
@@ -67,7 +98,7 @@ describe('AudioChannel', () => {
       onStop: jest.fn(), // Ajoutez cette ligne
     };
 
-    // Réinitialiser l'instance singleton avant chaque test
+    // Reset the singleton instance before each test
     (AudioChannel as any).instance = null;
     audioChannel = AudioChannel.getInstance(mockEventHandler, () => mockAudioContext);
     mockMusic = { id: '1', name: 'Test Music', url: 'https://cdn.pixabay.com/audio/2023/12/29/audio_a1497a53af.mp3' };
@@ -151,10 +182,157 @@ describe('AudioChannel', () => {
     expect(mockEventHandler.onError).toHaveBeenCalled();
   });
 
-  // Ajoutez un test pour vérifier que getInstance renvoie toujours la même instance
   test('getInstance always returns the same instance', () => {
     const instance1 = AudioChannel.getInstance(mockEventHandler);
     const instance2 = AudioChannel.getInstance(mockEventHandler);
     expect(instance1).toBe(instance2);
+  });
+
+  test('initialize throws error when audioContextFactory returns null', async () => {
+    (AudioChannel as any).instance = null;
+    const nullAudioContextFactory = () => null;
+    const audioChannel = AudioChannel.getInstance(mockEventHandler, nullAudioContextFactory);
+
+    await expect(audioChannel.initialize()).rejects.toThrow(AudioError);
+    expect(audioChannel['audioContext']).toBeNull();
+  });
+
+  test('initialize creates audioContext when no factory is provided', async () => {
+    (AudioChannel as any).instance = null;
+    const audioChannel = AudioChannel.getInstance(mockEventHandler);
+
+    await audioChannel.initialize();
+    expect(window.AudioContext).toHaveBeenCalled();
+    expect(mockCreateGain).toHaveBeenCalled();
+    expect(mockCreateAnalyser).toHaveBeenCalled();
+    expect(audioChannel['audioContext']).not.toBeNull();
+  });
+
+  test('initialize throws error when AudioContext is not supported', async () => {
+    (global as any).window = {};
+    (AudioChannel as any).instance = null;
+    const audioChannel = AudioChannel.getInstance(mockEventHandler);
+    await expect(audioChannel.initialize()).rejects.toThrow(AudioError);
+  });
+
+  test('dispose cleans up resources', async () => {
+    await audioChannel.initialize();
+    audioChannel.dispose();
+    expect(mockAudioContext.close).toHaveBeenCalled();
+    expect(mockGainNode.disconnect).toHaveBeenCalled();
+    expect(mockAnalyserNode.disconnect).toHaveBeenCalled();
+    expect(audioChannel['audioBuffer']).toBeNull();
+    expect(audioChannel.currentMusic).toBeNull();
+    expect(audioChannel.playbackState).toBe(AudioChannel.PlaybackState.IDLE);
+  });
+
+  test('createSourceNode does nothing when audioContext or audioBuffer is null', () => {
+    audioChannel['audioContext'] = null;
+    audioChannel['createSourceNode']();
+    expect(audioChannel['sourceNode']).toBeNull();
+
+    audioChannel['audioContext'] = mockAudioContext;
+    audioChannel['audioBuffer'] = null;
+    audioChannel['createSourceNode']();
+    expect(audioChannel['sourceNode']).toBeNull();
+  });
+
+  test('updateTime handles end of playback', async () => {
+    await initializeAndLoadMusic();
+    await audioChannel.play();
+    // Spy on handlePlaybackEnded
+    const handlePlaybackEndedSpy = jest.spyOn(audioChannel as any, 'handlePlaybackEnded');
+
+    // Simulate the end of playback
+    (audioChannel as any).audioContext.currentTime = 101; // Exceeds the duration of 100
+    (audioChannel as any).updateTime();
+
+    expect(handlePlaybackEndedSpy).toHaveBeenCalled();
+    expect(audioChannel.playbackState).toBe(AudioChannel.PlaybackState.IDLE);
+    expect(mockEventHandler.onEnded).toHaveBeenCalled();
+
+    // Restore the spy
+    handlePlaybackEndedSpy.mockRestore();
+  });
+
+  test('requestAnimationFrame is called during playback', async () => {
+    const mockRequestAnimationFrame = jest.fn();
+    (global as any).requestAnimationFrame = mockRequestAnimationFrame;
+
+    await initializeAndLoadMusic();
+    await audioChannel.play();
+
+    expect(mockRequestAnimationFrame).toHaveBeenCalled();
+  });
+
+  test('updateTime does nothing when audio is not playing', async () => {
+    await initializeAndLoadMusic();
+
+    // Make sure isAudioPlaying is false
+    (audioChannel as any).isAudioPlaying = false;
+
+    const requestAnimationFrameSpy = jest.spyOn(audioChannel as any, 'requestAnimationFrame');
+
+    (audioChannel as any).updateTime();
+
+    expect(mockEventHandler.onTimeUpdate).not.toHaveBeenCalled();
+    expect(requestAnimationFrameSpy).not.toHaveBeenCalled();
+
+    requestAnimationFrameSpy.mockRestore();
+  });
+
+  test('initializeVolume sets the correct volume', async () => {
+    await audioChannel.initialize();
+    const setVolumeSpy = jest.spyOn(audioChannel, 'setVolume');
+
+    audioChannel.initializeVolume(50);
+
+    expect(setVolumeSpy).toHaveBeenCalledWith(0.5);
+
+    setVolumeSpy.mockRestore();
+  });
+
+  test('updateTime does nothing when audioContext is null', async () => {
+    await initializeAndLoadMusic();
+    (audioChannel as any).audioContext = null;
+    (audioChannel as any).updateTime();
+    expect(mockEventHandler.onTimeUpdate).not.toHaveBeenCalled();
+  });
+
+  test('updateTime handles case when audioBuffer is null', async () => {
+    await initializeAndLoadMusic();
+    await audioChannel.play();
+    (audioChannel as any).audioBuffer = null;
+    (audioChannel as any).updateTime();
+    expect(mockEventHandler.onTimeUpdate).toHaveBeenCalled();
+  });
+
+
+  test('seek handles various edge cases', async () => {
+    await initializeAndLoadMusic();
+
+
+    audioChannel.seek(-1);
+    expect(mockEventHandler.onTimeUpdate).toHaveBeenCalledWith(0);
+
+
+    (audioChannel as any).audioBuffer = { duration: 100 };
+    audioChannel.seek(150);
+    expect(mockEventHandler.onTimeUpdate).toHaveBeenCalledWith(100);
+
+    // Case where the audio is playing, seeking to a new position
+    await audioChannel.play();
+    const playSpy = jest.spyOn(audioChannel, 'play');
+    audioChannel.seek(50);
+    expect(playSpy).toHaveBeenCalled();
+
+    playSpy.mockRestore();
+  });
+
+  test('createSourceNode does nothing when audioContext is null', async () => {
+    await initializeAndLoadMusic();
+    (audioChannel as any).audioContext = null;
+    (audioChannel as any).createSourceNode();
+    expect(audioChannel['sourceNode']).toBeNull();
   });
 });

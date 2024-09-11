@@ -21,6 +21,8 @@ export interface EventHandler {
   onError?: (error: Error) => void;
   /** Called when the audio analyser node is created */
   onAnalyserCreated?: (analyser: AnalyserNode) => void;
+  /** Called when the play state changes */
+  onPlayStateChange?: (isPlaying: boolean) => void;
 }
 
 /**

@@ -1,5 +1,0 @@
-{
-  "extends": "@omi3/typescript/react-library",
-  "include": ["."],
-  "exclude": ["node_modules"]
-}

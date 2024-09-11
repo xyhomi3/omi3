@@ -1,8 +1,0 @@
-{
-  "name": "@omi3/typescript",
-  "version": "0.0.1",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
-}
