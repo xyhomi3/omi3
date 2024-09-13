@@ -1,4 +1,4 @@
-import { Pause, Play, Volume, Volume1, Volume2 } from 'lucide-react';
+import { Loader2, Pause, Play, Volume, Volume1, Volume2, VolumeX } from 'lucide-react';
 
 export const Icons = {
   Pause,
@@ -6,4 +6,6 @@ export const Icons = {
   Volume,
   Volume1,
   Volume2,
+  VolumeX,
+  Loader2,
 };
