@@ -13,6 +13,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup repository
+        run: |
+          git fetch origin main:main
+          git branch -a
+
+      - name: Debug info
+        run: |
+          git status
+          git log --oneline -n 5
+          git branch -a
+
       - uses: pnpm/action-setup@v2
         with:
           version: 9.1.1
