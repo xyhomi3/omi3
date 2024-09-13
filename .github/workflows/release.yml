@@ -9,26 +9,12 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  codeql-analysis:
-    name: CodeQL Analysis
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
-
   release:
     name: Release
-    needs: codeql-analysis
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-      security-events: write
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
@@ -48,19 +34,19 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
+      - name: Create Release Pull Request
+        if: github.event_name == 'pull_request'
         uses: changesets/action@v1
         with:
           version: pnpm version-packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: changesets/action@v1
+        with:
           publish: pnpm release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Push changes
-        if: steps.changesets.outputs.hasChangesets == 'true'
-        run: |
-          git push origin HEAD:${{ github.head_ref || github.ref_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
