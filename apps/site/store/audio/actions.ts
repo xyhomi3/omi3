@@ -4,9 +4,8 @@ import {
   currentTimeAtom,
   durationAtom,
   eventHandlersAtom,
-  isPlayingAtom,
   localVolumeAtom,
-  volumeInitializerAtom,
+  playbackStateAtom,
 } from './atoms';
 
 import { AudioChannel } from '@omi3/audio';
@@ -20,49 +19,58 @@ export const initializeAudioChannelAtom = atom(null, (get, set) => {
   const eventHandlers = {
     ...get(eventHandlersAtom),
     onAnalyserCreated: (analyser: AnalyserNode) => {
-      analyser.maxDecibels = -90;
       set(analyserAtom, analyser);
     },
     onTimeUpdate: (time: number) => set(currentTimeAtom, time),
     onDurationChange: (duration: number) => set(durationAtom, duration),
-    onEnded: () => set(isPlayingAtom, false),
-    onStop: () => set(isPlayingAtom, false),
-    onPlayStateChange: (isPlaying: boolean) => set(isPlayingAtom, isPlaying),
+    onEnded: () => set(playbackStateAtom, AudioChannel.PlaybackState.IDLE),
+    onStop: () => set(playbackStateAtom, AudioChannel.PlaybackState.IDLE),
+    onPlay: () => set(playbackStateAtom, AudioChannel.PlaybackState.PLAYING),
+    onPause: () => set(playbackStateAtom, AudioChannel.PlaybackState.PAUSED),
+    onSeek: (time: number) => {
+      set(currentTimeAtom, time);
+    },
+    onPlayStateChange: (isPlaying: boolean) => {
+      set(playbackStateAtom, isPlaying ? AudioChannel.PlaybackState.PLAYING : AudioChannel.PlaybackState.PAUSED);
+    },
   };
   const audioChannel = AudioChannel.getInstance(eventHandlers);
   set(audioChannelAtom, audioChannel);
-  set(volumeInitializerAtom);
 });
 
-export const handlePlayPauseAtom = atom(null, async (get, set) => {
+export const togglePlayPauseAtom = atom(null, async (get, set) => {
   const audioChannel = get(audioChannelAtom);
-  const isPlaying = get(isPlayingAtom);
+  const playbackState = get(playbackStateAtom);
   const localVolume = get(localVolumeAtom);
+  const currentTime = get(currentTimeAtom);
 
   if (!audioChannel) return;
 
   try {
-    if (!isPlaying) {
+    if (playbackState !== AudioChannel.PlaybackState.PLAYING) {
       await audioChannel.initialize();
       if (!audioChannel.currentMusic) {
-        await audioChannel.initialize();
+        set(playbackStateAtom, AudioChannel.PlaybackState.LOADING);
         await audioChannel.load(sampleMusic);
       }
       audioChannel.setVolume(localVolume / 100);
+      if (currentTime > 0) {
+        audioChannel.seek(currentTime);
+      }
       await audioChannel.play();
     } else {
       audioChannel.pause();
     }
-    set(isPlayingAtom, !isPlaying);
   } catch (error) {
-    console.error('Erreur lors de la lecture/pause audio:', error);
+    set(playbackStateAtom, AudioChannel.PlaybackState.ERROR);
   }
 });
 
-export const seekAudioAtom = atom(null, (get, set, time: number) => {
+export const seekAtom = atom(null, (get, set, time: number) => {
   const audioChannel = get(audioChannelAtom);
   if (audioChannel) {
     audioChannel.seek(time);
+    set(currentTimeAtom, time);
   }
 });
 
