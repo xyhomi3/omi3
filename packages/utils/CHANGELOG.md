@@ -1,5 +1,12 @@
 # @omi3/utils
 
+## 0.0.4
+
+### Patch Changes
+
+- 66ce409: optmisation
+- 65b41df: formating
+
 ## 0.0.3
 
 ### Patch Changes
