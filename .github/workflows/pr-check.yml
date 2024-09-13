@@ -1,0 +1,57 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    name: Check Changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Setup repository
+        run: |
+          git fetch origin main:main
+          git branch -a
+
+      - name: Debug info
+        run: |
+          git status
+          git log --oneline -n 5
+          git branch -a
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.1.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check Changesets
+        run: pnpm changeset status
+
+      - name: Dry Run Version Update
+        run: pnpm changeset version --dry-run --verbose
+
+      - name: Debug Git status after changeset
+        if: failure()
+        run: |
+          git status
+          git diff
