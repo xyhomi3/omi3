@@ -4,6 +4,7 @@ import { Music } from '../types';
 
 /**
  * Manages audio playback and processing for a single audio channel.
+ * Implements best practices for Web Audio API usage.
  */
 export class AudioChannel {
   private static instance: AudioChannel | null = null;
@@ -44,15 +45,7 @@ export class AudioChannel {
    */
   private constructor(eventHandler: EventHandler, audioContextFactory?: () => AudioContext | null) {
     this.eventHandler = eventHandler;
-    this.audioContextFactory =
-      audioContextFactory ||
-      (() => {
-        if (typeof window !== 'undefined' && (window.AudioContext || (window as any).webkitAudioContext)) {
-          return new (window.AudioContext || (window as any).webkitAudioContext)();
-        }
-        console.error('AudioContext is not supported in this environment');
-        return null;
-      });
+    this.audioContextFactory = audioContextFactory || this.defaultAudioContextFactory;
   }
 
   /**
@@ -75,13 +68,13 @@ export class AudioChannel {
     if (!this.audioContext) {
       const context = this.audioContextFactory();
       if (!context) {
-        throw new AudioError('Failed to create AudioContext', 'AUDIO_CONTEXT_CREATION_FAILED');
+        throw new AudioError('AudioContext is not supported', 'AUDIO_CONTEXT_NOT_SUPPORTED');
       }
       this.audioContext = context;
-      await this.setupAudioProcessing();
-      this.setVolume(1);
+      await this.audioContext.resume();
     }
-    await this.audioContext.resume();
+    await this.setupAudioProcessing();
+    this.setVolume(1);
   }
 
   /**
@@ -96,6 +89,7 @@ export class AudioChannel {
       this.currentMusic = music;
       this.playbackState = AudioChannel.PlaybackState.READY;
       this.eventHandler.onDurationChange?.(this.audioBuffer.duration);
+      this.eventHandler.onBufferLoaded?.(this.audioBuffer);
     } catch (error) {
       this.playbackState = AudioChannel.PlaybackState.ERROR;
       this.eventHandler.onError?.(error as AudioError);
@@ -124,7 +118,7 @@ export class AudioChannel {
    */
   public pause(): void {
     if (this.isAudioPlaying) {
-      this.pauseAt = this.audioContext!.currentTime - this.startAt;
+      this.pauseAt = this.getCurrentTime();
       this.stop();
       this.isAudioPlaying = false;
       this.playbackState = AudioChannel.PlaybackState.PAUSED;
@@ -142,14 +136,13 @@ export class AudioChannel {
       this.pause();
     }
 
-    this.pauseAt = Math.max(0, Math.min(time, this.audioBuffer?.duration || 0));
+    this.pauseAt = Math.max(0, Math.min(time, this.getDuration()));
     if (wasPlaying) {
       this.play();
     } else {
       this.eventHandler.onTimeUpdate?.(this.pauseAt);
     }
     this.eventHandler.onPlayStateChange?.(wasPlaying);
-
     this.eventHandler.onSeek?.(this.pauseAt);
   }
 
@@ -159,7 +152,8 @@ export class AudioChannel {
    */
   public setVolume(volume: number): void {
     if (this.gainNode && this.audioContext) {
-      this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
+      const safeVolume = Math.max(0, Math.min(1, volume));
+      this.gainNode.gain.setTargetAtTime(safeVolume, this.audioContext.currentTime, 0.01);
     }
   }
 
@@ -172,33 +166,89 @@ export class AudioChannel {
   }
 
   /**
+   * Gets the current playback time in seconds.
+   * @returns The current playback time.
+   */
+  public getCurrentTime(): number {
+    if (this.audioContext && this.startAt !== null && this.isAudioPlaying) {
+      return this.audioContext.currentTime - this.startAt;
+    }
+    return this.pauseAt;
+  }
+
+  /**
+   * Gets the total duration of the loaded audio in seconds.
+   * @returns The total duration of the audio.
+   */
+  public getDuration(): number {
+    return this.audioBuffer?.duration || 0;
+  }
+
+  /**
+   * Connects the audio channel to an AudioNode or AudioParam.
+   * @param destination - The AudioNode or AudioParam to connect to.
+   */
+  public connect(destination: AudioNode | AudioParam): void {
+    if (this.analyser) {
+      if (destination instanceof AudioNode) {
+        this.analyser.connect(destination);
+      } else if (destination instanceof AudioParam) {
+        this.analyser.connect(destination);
+      } else {
+        console.error('Invalid destination type for connection');
+      }
+    }
+  }
+
+  /**
+   * Disconnects the audio channel from all or specific destinations.
+   * @param destination - Optional AudioNode or AudioParam to disconnect from.
+   */
+  public disconnect(destination?: AudioNode | AudioParam): void {
+    if (this.analyser) {
+      if (destination === undefined) {
+        this.analyser.disconnect();
+      } else if (destination instanceof AudioNode) {
+        this.analyser.disconnect(destination);
+      } else if (destination instanceof AudioParam) {
+        this.analyser.disconnect(destination);
+      } else {
+        console.error('Invalid destination type for disconnection');
+      }
+    }
+  }
+
+  /**
    * Disposes of the audio channel and releases resources.
    */
   public dispose(): void {
     this.stop();
-    if (this.audioContext && typeof this.audioContext.close === 'function') {
+    if (this.audioContext) {
       this.audioContext.close();
     }
-    if (this.gainNode && typeof this.gainNode.disconnect === 'function') {
+    if (this.gainNode) {
       this.gainNode.disconnect();
     }
-    if (this.analyser && typeof this.analyser.disconnect === 'function') {
+    if (this.analyser) {
       this.analyser.disconnect();
     }
     this.audioBuffer = null;
     this.currentMusic = null;
     this.playbackState = AudioChannel.PlaybackState.IDLE;
-  }
-
-  /**
-   * Initializes the volume of the audio channel.
-   * @param volume - The volume level (0 to 100).
-   */
-  public initializeVolume(volume: number): void {
-    this.setVolume(volume / 100);
+    AudioChannel.instance = null;
   }
 
   // Private methods
+
+  /**
+   * Default factory function for creating AudioContext.
+   */
+  private defaultAudioContextFactory(): AudioContext | null {
+    if (typeof AudioContext !== 'undefined') {
+      return new AudioContext();
+    }
+    return null;
+  }
 
   /**
    * Sets up audio processing nodes.
@@ -283,22 +333,13 @@ export class AudioChannel {
    */
   private updateTime(): void {
     if (this.audioContext && this.startAt !== null && this.isAudioPlaying) {
-      const currentTime = this.audioContext.currentTime - this.startAt;
-      if (currentTime <= (this.audioBuffer?.duration || 0)) {
+      const currentTime = this.getCurrentTime();
+      if (currentTime <= this.getDuration()) {
         this.eventHandler.onTimeUpdate?.(currentTime);
-        this.animationFrame = this.requestAnimationFrame(() => this.updateTime());
+        this.animationFrame = requestAnimationFrame(() => this.updateTime());
       } else {
         this.handlePlaybackEnded();
       }
     }
-  }
-
-  /**
-   * Wrapper for requestAnimationFrame to allow for easier testing and mocking.
-   * @param callback - The callback to be executed on the next animation frame.
-   * @returns The request ID for the animation frame.
-   */
-  private requestAnimationFrame(callback: FrameRequestCallback): number {
-    return requestAnimationFrame(callback);
   }
 }

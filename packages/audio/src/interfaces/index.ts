@@ -5,26 +5,28 @@ import { Music } from '../types';
  * Defines callbacks for various audio events.
  */
 export interface EventHandler {
-  /** Called when audio playback starts */
+  /** Invoked when audio playback starts */
   onPlay?: () => void;
-  /** Called when audio playback is paused */
+  /** Invoked when audio playback is paused */
   onPause?: () => void;
-  /** Called when audio playback is stopped */
+  /** Invoked when audio playback is stopped */
   onStop?: () => void;
-  /** Called when audio playback ends */
+  /** Invoked when audio playback reaches the end */
   onEnded?: () => void;
-  /** Called periodically with the current playback time */
+  /** Invoked periodically with the current playback time (in seconds) */
   onTimeUpdate?: (time: number) => void;
-  /** Called when the audio duration is known or has changed */
+  /** Invoked when the audio duration is known or has changed (in seconds) */
   onDurationChange?: (duration: number) => void;
-  /** Called when an error occurs during audio operations */
+  /** Invoked when an error occurs during audio operations */
   onError?: (error: Error) => void;
-  /** Called when the audio analyser node is created */
+  /** Invoked when the audio analyser node is created */
   onAnalyserCreated?: (analyser: AnalyserNode) => void;
-  /** Called when the play state changes */
+  /** Invoked when the play state changes */
   onPlayStateChange?: (isPlaying: boolean) => void;
-  /** Called when the audio is seeked */
+  /** Invoked when the audio is seeked to a specific time */
   onSeek?: (time: number) => void;
+  /** Invoked when the audio buffer is loaded and decoded */
+  onBufferLoaded?: (buffer: AudioBuffer) => void;
 }
 
 /**
@@ -32,16 +34,26 @@ export interface EventHandler {
  * Defines the main operations that can be performed on an audio channel.
  */
 export interface AudioChannel {
-  /** Loads an audio file */
+  /** Loads an audio file and prepares it for playback */
   load: (music: Music) => Promise<void>;
   /** Starts or resumes audio playback */
   play: () => Promise<void>;
   /** Pauses audio playback */
   pause: () => void;
-  /** Seeks to a specific time in the audio */
+  /** Seeks to a specific time in the audio (in seconds) */
   seek: (time: number) => void;
   /** Checks if audio is currently playing */
   isPlaying: () => boolean;
   /** Disposes of the audio channel and releases resources */
   dispose: () => void;
+  /** Sets the volume of the audio channel (0 to 1) */
+  setVolume: (volume: number) => void;
+  /** Gets the current playback time (in seconds) */
+  getCurrentTime: () => number;
+  /** Gets the total duration of the loaded audio (in seconds) */
+  getDuration: () => number;
+  /** Connects the audio channel to an AudioNode or AudioParam */
+  connect: (destination: AudioNode | AudioParam) => void;
+  /** Disconnects the audio channel from all or specific destinations */
+  disconnect: (destination?: AudioNode | AudioParam) => void;
 }
