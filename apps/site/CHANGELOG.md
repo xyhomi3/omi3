@@ -1,5 +1,17 @@
 # @omi3/site
 
+## 0.0.7
+
+### Patch Changes
+
+- 66ce409: optmisation
+- 65b41df: formating
+- Updated dependencies [66ce409]
+- Updated dependencies [65b41df]
+  - @omi3/audio@0.0.4
+  - @omi3/utils@0.0.4
+  - @omi3/ui@0.0.3
+
 ## 0.0.6
 
 ### Patch Changes
