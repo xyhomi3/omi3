@@ -15,6 +15,7 @@
     "@omi3/audio": "workspace:*",
     "@omi3/ui": "workspace:*",
     "@omi3/utils": "workspace:*",
+    "jotai": "^2.9.3",
     "next": "14.2.8",
     "react": "^18.3.0",
     "react-dom": "^18.3",

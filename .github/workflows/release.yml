@@ -32,21 +32,14 @@ jobs:
           node-version: 'lts/*'
           cache: 'pnpm'
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Create Release Pull Request
-        if: github.event_name == 'pull_request'
+      - name: Create Release Pull Request or Publish to npm
         uses: changesets/action@v1
         with:
           version: pnpm version-packages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish to npm
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: changesets/action@v1
-        with:
-          publish: pnpm release
+          publish: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'pnpm release' || '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

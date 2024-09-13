@@ -4,11 +4,19 @@ interface AudioVisualizerProps {
   analyser: AnalyserNode | null;
   width: number;
   height: number;
+  backgroundColor?: string;
+  lineColor?: string;
 }
 
-class AudioVisualizer extends React.Component<AudioVisualizerProps> {
+class Visualizer extends React.Component<AudioVisualizerProps> {
   private canvasRef: React.RefObject<HTMLCanvasElement>;
   private animationFrameId: number | null = null;
+
+  static defaultProps = {
+    backgroundColor: 'rgb(0, 0, 0)',
+    lineColor: '#a3e636',
+  };
+
   constructor(props: AudioVisualizerProps) {
     super(props);
     this.canvasRef = React.createRef();
@@ -18,20 +26,26 @@ class AudioVisualizer extends React.Component<AudioVisualizerProps> {
     this.setupVisualizer();
   }
 
-  componentDidUpdate(prevProps: AudioVisualizerProps) {
+  componentDidUpdate(prevProps: AudioVisualizerProps): void {
     if (this.props.analyser !== prevProps.analyser) {
+      this.stopVisualization();
       this.setupVisualizer();
     }
   }
 
   componentWillUnmount() {
-    if (this.animationFrameId) {
+    this.stopVisualization();
+  }
+
+  stopVisualization() {
+    if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
     }
   }
 
-  setupVisualizer() {
-    const { analyser } = this.props;
+  public setupVisualizer() {
+    const { analyser, backgroundColor, lineColor } = this.props;
     const canvas = this.canvasRef.current;
 
     if (!analyser || !canvas) return;
@@ -43,13 +57,14 @@ class AudioVisualizer extends React.Component<AudioVisualizerProps> {
     const dataArray = new Uint8Array(bufferLength);
 
     const draw = () => {
+      if (!this.canvasRef.current) return;
       this.animationFrameId = requestAnimationFrame(draw);
       analyser.getByteTimeDomainData(dataArray);
 
-      canvasCtx.fillStyle = ' rgb(0, 0, 0)';
+      canvasCtx.fillStyle = backgroundColor!;
       canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
       canvasCtx.lineWidth = 2;
-      canvasCtx.strokeStyle = '#a3e636';
+      canvasCtx.strokeStyle = lineColor!;
       canvasCtx.beginPath();
 
       const sliceWidth = canvas.width / bufferLength;
@@ -78,12 +93,29 @@ class AudioVisualizer extends React.Component<AudioVisualizerProps> {
   render() {
     const { width, height } = this.props;
 
-    return (
-      <div className="bg-bg dark:bg-darkBg dark:border-darkBorder rounded-base border-2 p-0.5">
-        <canvas ref={this.canvasRef} width={width} height={height} className="h-auto w-full" />
-      </div>
+    const containerStyle: React.CSSProperties = {
+      backgroundColor: 'transparent',
+      border: '2px solid #333',
+      borderRadius: '4px',
+      padding: '2px',
+    };
+
+    const canvasStyle: React.CSSProperties = {
+      width: '100%',
+      height: 'auto',
+    };
+
+    return React.createElement(
+      'div',
+      { style: containerStyle },
+      React.createElement('canvas', {
+        ref: this.canvasRef,
+        width: width,
+        height: height,
+        style: canvasStyle,
+      })
     );
   }
 }
 
-export default AudioVisualizer;
+export default Visualizer;

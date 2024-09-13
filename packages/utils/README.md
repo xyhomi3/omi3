@@ -32,6 +32,5 @@ import { someUtilFunction } from '@omi3/utils';
 
 <div>
   <img alt="NPM" src="https://img.shields.io/npm/v/%40omi3%2Futils?color=red&label=npm&logo=npm&logoColor=red">
-  <img alt="NPM Downloads" src="https://img.shields.io/npm/dm/%40omi3%2Futils">
   <img alt="NPM Unpacked Size" src="https://img.shields.io/npm/unpacked-size/%40omi3%2Futils">
 </div>

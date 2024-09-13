@@ -1,68 +1,64 @@
 'use client';
 
-import { Button, Card, CardContent, CardHeader, CardTitle, Progress } from '@omi3/ui';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { AudioChannel, Visualizer } from '@omi3/audio';
+import { Button, Card, CardContent, CardHeader, CardTitle, Icons, Slider } from '@omi3/ui';
+import { playtime, seek } from '@omi3/utils';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useCallback, useMemo } from 'react';
 
-import { AudioChannel } from '@omi3/audio';
-import { playtime } from '@omi3/utils';
-import AudioVisualizer from './visualizer';
-
-const sampleMusic = {
-  url: 'https://cdn.pixabay.com/audio/2023/12/29/audio_a1497a53af.mp3',
-};
+import { audio } from '@/store';
 
 export function AudioPlayer() {
-  const [audioChannel, setAudioChannel] = useState<AudioChannel | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const audioState = useAtomValue(audio.stateAtom);
+  const analyser = useAtomValue(audio.analyserAtom);
+  const togglePlayPause = useSetAtom(audio.togglePlayPauseAtom);
+  const initializeAudioChannel = useSetAtom(audio.initializeAudioChannelAtom);
+  const seekAudio = useSetAtom(audio.seekAtom);
+  const setVolume = useSetAtom(audio.setVolumeAtom);
 
-  const eventHandlers = useMemo(
+  const { playbackState, currentTime, duration, localVolume, isInitialized } = audioState;
+
+  const handlePlay = useCallback(() => {
+    if (!isInitialized) {
+      initializeAudioChannel();
+    }
+    togglePlayPause();
+  }, [isInitialized, initializeAudioChannel, togglePlayPause]);
+
+  const audioHandlers = useMemo(
     () => ({
-      onPlay: () => setIsPlaying(true),
-      onPause: () => setIsPlaying(false),
-      onEnded: () => setIsPlaying(false),
-      onAnalyserCreated: (newAnalyser: AnalyserNode) => {
-        newAnalyser.fftSize = 1024; // ou 2048 pour plus de détails
-        newAnalyser.smoothingTimeConstant = 0.8;
-        newAnalyser.minDecibels = -90;
-        newAnalyser.maxDecibels = -10;
-        setAnalyser(newAnalyser);
+      onValueChange: (values: number[]) => {
+        seekAudio(values[0]);
       },
-      onTimeUpdate: (time: number) => setCurrentTime(time),
-      onDurationChange: (newDuration: number) => setDuration(newDuration),
-      onStop: () => setIsPlaying(false),
+      onValueCommit: (values: number[]) => {
+        if (values.length > 0) {
+          seekAudio(values[0]);
+        }
+      },
     }),
-    [],
+    [seekAudio],
   );
 
-  useEffect(() => {
-    const channel = AudioChannel.getInstance(eventHandlers);
-    setAudioChannel(channel);
+  const volumeHandlers = useMemo(() => seek((newVolume: number) => setVolume(newVolume)), [setVolume]);
 
-    return () => {
-      channel.dispose();
-    };
-  }, [eventHandlers]);
+  useAtomValue(audio.initializeAudioChannelAtom);
 
-  const handlePlayPause = useCallback(async () => {
-    if (!audioChannel) return;
+  const getVolumeIcon = useCallback(() => {
+    if (localVolume === 0) return <Icons.VolumeX />;
+    if (localVolume < 50) return <Icons.Volume1 />;
+    return <Icons.Volume2 />;
+  }, [localVolume]);
 
-    try {
-      if (!isPlaying) {
-        await audioChannel.initialize();
-        if (!audioChannel.currentMusic) {
-          await audioChannel.load(sampleMusic);
-        }
-        await audioChannel.play();
-      } else {
-        audioChannel.pause();
-      }
-    } catch (error) {
-      console.error('Erreur lors de la lecture/pause audio:', error);
+  const getPlayPauseIcon = useCallback(() => {
+    switch (playbackState) {
+      case AudioChannel.PlaybackState.PLAYING:
+        return <Icons.Pause />;
+      case AudioChannel.PlaybackState.LOADING:
+        return <Icons.Loader2 className="animate-spin" />;
+      default:
+        return <Icons.Play />;
     }
-  }, [audioChannel, isPlaying]);
+  }, [playbackState]);
 
   return (
     <Card className="w-full">
@@ -73,16 +69,29 @@ export function AudioPlayer() {
       </CardHeader>
       <CardContent>
         <div className="w-full">
-          <AudioVisualizer analyser={analyser} width={300} height={150} />
+          <Visualizer analyser={analyser} width={300} height={150} />
         </div>
-        <Progress value={(currentTime / duration) * 100} className="mt-4" />
+        <Slider
+          className="mt-4"
+          value={[currentTime]}
+          max={duration}
+          step={0.1}
+          onValueChange={audioHandlers.onValueChange}
+          onValueCommit={audioHandlers.onValueCommit}
+        />
         <div className="text-text mt-2 flex w-full justify-between text-sm">
           <span>{playtime(currentTime)}</span>
           <span>{playtime(duration)}</span>
         </div>
-        <Button onClick={handlePlayPause} className="mt-4 w-full">
-          {isPlaying ? 'Pause' : 'Lecture'}
-        </Button>
+        <div className="mt-4 flex items-center justify-between">
+          <Button size="icon" onClick={handlePlay} disabled={playbackState === AudioChannel.PlaybackState.LOADING}>
+            {getPlayPauseIcon()}
+          </Button>
+          <div className="flex items-center gap-2">
+            {getVolumeIcon()}
+            <Slider className="w-32" value={[localVolume]} max={100} step={1} {...volumeHandlers} />
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
