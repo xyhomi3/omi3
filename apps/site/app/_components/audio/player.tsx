@@ -87,8 +87,8 @@ export function AudioPlayer() {
             step={0.1}
             onValueChange={audioHandlers.onValueChange}
             onValueCommit={audioHandlers.onValueCommit}
+            aria-label={`Playback progress: ${playtime(currentTime)} of ${playtime(duration)}`}
           />
-          <span className="sr-only">Progression de la lecture : {playtime(currentTime)} sur {playtime(duration)}</span>
         </div>
         <div className="mt-2 flex w-full justify-between text-sm">
           <span>{playtime(currentTime)}</span>
@@ -111,8 +111,8 @@ export function AudioPlayer() {
                 max={100}
                 step={1}
                 {...volumeHandlers}
+                aria-label={`Volume control: ${localVolume}%`}
               />
-              <span className="sr-only">Contrôle du volume : {localVolume}%</span>
             </div>
           </div>
         </div>
