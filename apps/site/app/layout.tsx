@@ -22,9 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
-      <body className={cn(silk.variable, 'font-silk flex min-h-full flex-col antialiased')}>
+      <body
+        className={cn(
+          silk.variable,
+          'font-silk bg-bg dark:bg-darkBg text-text dark:text-darkText flex min-h-full flex-col antialiased',
+        )}
+      >
         <Providers>
-          <main className="flex flex-grow items-center justify-center p-5">{children}</main>
+          {children}
           <Footer />
         </Providers>
       </body>

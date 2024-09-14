@@ -53,45 +53,74 @@ export function AudioPlayer() {
   const getPlayPauseIcon = useCallback(() => {
     switch (playbackState) {
       case AudioChannel.PlaybackState.PLAYING:
-        return <Icons.Pause className='fill-text' />;
+        return <Icons.Pause className="fill-text" />;
       case AudioChannel.PlaybackState.LOADING:
         return <Icons.Loader2 className="animate-spin" />;
       default:
-        return <Icons.Play className='fill-text' />;
+        return <Icons.Play className="fill-text" />;
     }
   }, [playbackState]);
 
+  const getThumbProps = useCallback((value: number) => ({
+    'aria-label': `Current value: ${value}`,
+    title: `Current value: ${value}`,
+  }), []);
+
   return (
     <Card className="w-full">
-      <CardHeader className="flex flex-row justify-between items-center">
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>
-          Omi<span className="text-[#f50000]">3</span> Player
+          Omi<span className="text-[#ff6b6b]">3</span> Player
         </CardTitle>
-        <ThemeWidget/>
+        <ThemeWidget />
       </CardHeader>
       <CardContent>
         <div className="w-full">
-          <Visualizer analyser={analyser} width={300} height={150} className="border-2 border-border dark:border-darkBorder rounded-md" />
+          <Visualizer
+            analyser={analyser}
+            width={300}
+            height={150}
+            className="border-border dark:border-darkBorder rounded-base border-2"
+            aria-label="Visualiseur audio"
+          />
         </div>
-        <Slider
-          className="mt-4"
-          value={[currentTime]}
-          max={duration}
-          step={0.1}
-          onValueChange={audioHandlers.onValueChange}
-          onValueCommit={audioHandlers.onValueCommit}
-        />
-        <div className="text-text dark:text-darkText mt-2 flex w-full justify-between text-sm">
+        <div className="relative mt-4">
+          <Slider
+            className="mt-4"
+            value={[currentTime]}
+            max={duration}
+            step={0.1}
+            onValueChange={audioHandlers.onValueChange}
+            onValueCommit={audioHandlers.onValueCommit}
+            aria-label={`Playback progress: ${playtime(currentTime)} of ${playtime(duration)}`}
+            thumbProps={getThumbProps(currentTime)}
+          />
+        </div>
+        <div className="mt-2 flex w-full justify-between text-sm">
           <span>{playtime(currentTime)}</span>
           <span>{playtime(duration)}</span>
         </div>
         <div className="mt-4 flex items-center justify-between">
-          <Button size="icon" onClick={handlePlay} disabled={playbackState === AudioChannel.PlaybackState.LOADING}>
+          <Button
+            size="icon"
+            onClick={handlePlay}
+            disabled={playbackState === AudioChannel.PlaybackState.LOADING}
+            aria-label={playbackState === AudioChannel.PlaybackState.PLAYING ? 'Pause' : 'Lecture'}
+          >
             {getPlayPauseIcon()}
           </Button>
           <div className="flex items-center gap-2">
-            {getVolumeIcon()}
-            <Slider className="w-32" value={[localVolume]} max={100} step={1} {...volumeHandlers} />
+            <span aria-hidden="true">{getVolumeIcon()}</span>
+            <div className="relative w-32">
+              <Slider
+                value={[localVolume]}
+                max={100}
+                step={1}
+                {...volumeHandlers}
+                aria-label={`Volume control: ${localVolume}%`}
+                thumbProps={getThumbProps(localVolume)}
+              />
+            </div>
           </div>
         </div>
       </CardContent>
