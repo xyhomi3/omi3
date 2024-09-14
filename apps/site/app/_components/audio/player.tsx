@@ -61,6 +61,11 @@ export function AudioPlayer() {
     }
   }, [playbackState]);
 
+  const getThumbProps = useCallback((value: number) => ({
+    'aria-label': `Current value: ${value}`,
+    title: `Current value: ${value}`,
+  }), []);
+
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -88,6 +93,7 @@ export function AudioPlayer() {
             onValueChange={audioHandlers.onValueChange}
             onValueCommit={audioHandlers.onValueCommit}
             aria-label={`Playback progress: ${playtime(currentTime)} of ${playtime(duration)}`}
+            thumbProps={getThumbProps(currentTime)}
           />
         </div>
         <div className="mt-2 flex w-full justify-between text-sm">
@@ -112,6 +118,7 @@ export function AudioPlayer() {
                 step={1}
                 {...volumeHandlers}
                 aria-label={`Volume control: ${localVolume}%`}
+                thumbProps={getThumbProps(localVolume)}
               />
             </div>
           </div>
