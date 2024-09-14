@@ -87,7 +87,9 @@ export function AudioPlayer() {
           onValueChange={audioHandlers.onValueChange}
           onValueCommit={audioHandlers.onValueCommit}
           aria-label="Progression de la lecture"
-          role="slider"
+          aria-valuenow={currentTime}
+          aria-valuemin={0}
+          aria-valuemax={duration}
         />
         <div className="mt-2 flex w-full justify-between text-sm">
           <span>{playtime(currentTime)}</span>
@@ -103,7 +105,7 @@ export function AudioPlayer() {
             {getPlayPauseIcon()}
           </Button>
           <div className="flex items-center gap-2">
-            {getVolumeIcon()}
+            <span aria-hidden="true">{getVolumeIcon()}</span>
             <Slider
               className="w-32"
               value={[localVolume]}
@@ -111,7 +113,9 @@ export function AudioPlayer() {
               step={1}
               {...volumeHandlers}
               aria-label="Contrôle du volume"
-              role="slider"
+              aria-valuenow={localVolume}
+              aria-valuemin={0}
+              aria-valuemax={100}
             />
           </div>
         </div>
