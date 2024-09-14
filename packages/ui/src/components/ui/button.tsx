@@ -1,8 +1,8 @@
 import * as React from 'react';
 
+import { cn } from '@omi3/utils';
 import { Slot } from '@radix-ui/react-slot';
 import type { VariantProps } from 'class-variance-authority';
-import { cn } from '@omi3/utils';
 import { cva } from 'class-variance-authority';
 
 const buttonVariants = cva(
@@ -12,13 +12,13 @@ const buttonVariants = cva(
       variant: {
         default:
           'bg-main border-2 border-border dark:border-darkBorder shadow-light dark:shadow-dark data-[state=pressed]:translate-x-boxShadowX data-[state=pressed]:translate-y-boxShadowY data-[state=pressed]:shadow-none dark:data-[state=pressed]:shadow-none',
-        noShadow: 'bg-white border-2 border-border dark:border-darkBorder',
+        noShadow: 'border-2 border-border dark:border-darkBorder bg-bg dark:bg-secondaryBlack',
         link: 'underline-offset-4 text-text dark:text-darkText hover:underline',
         neutral:
           'bg-white dark:bg-darkBg dark:text-darkText border-2 border-border dark:border-darkBorder shadow-light dark:shadow-dark data-[state=pressed]:translate-x-boxShadowX data-[state=pressed]:translate-y-boxShadowY data-[state=pressed]:shadow-none dark:data-[state=pressed]:shadow-none',
-        outline: 'bg-transparent border-2 text-white border-main',
-        ghost: 'border-none text-white',
-        second: 'bg-main border-2 text-black border-black',
+        reverse:
+          'bg-main border-2 border-border dark:border-darkBorder hover:translate-x-reverseBoxShadowX hover:translate-y-reverseBoxShadowY hover:shadow-light dark:hover:shadow-dark',
+
         destructive:
           'bg-[#ff6b6b] text-white border-2 border-border dark:border-darkBorder shadow-light dark:shadow-dark data-[state=pressed]:translate-x-boxShadowX data-[state=pressed]:translate-y-boxShadowY data-[state=pressed]:shadow-none dark:data-[state=pressed]:shadow-none',
       },
@@ -40,32 +40,16 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  loading?: boolean;
-  label?: string | null;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant,
-      size,
-      asChild = false,
-      loading,
-      children,
-      label,
-
-      ...props
-    },
-    ref,
-  ) => {
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     const [pressed, setPressed] = React.useState(false);
 
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
-        disabled={loading}
         ref={ref}
         data-state={pressed ? 'pressed' : 'unpressed'}
         onMouseDown={() => setPressed(true)}

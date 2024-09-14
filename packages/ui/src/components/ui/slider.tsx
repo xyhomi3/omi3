@@ -1,7 +1,7 @@
 'use client'
 
-import * as React from 'react'
 import * as SliderPrimitive from '@radix-ui/react-slider'
+import * as React from 'react'
 
 import { cn } from '@omi3/utils'
 
@@ -17,7 +17,7 @@ const Slider = React.forwardRef<
     )}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-3 w-full grow overflow-hidden rounded-full border-2 border-border dark:border-darkBorder bg-bg dark:bg-darkBg">
+    <SliderPrimitive.Track className="relative h-3 w-full grow overflow-hidden rounded-full border-2 border-border dark:border-darkBorder bg-bg dark:bg-secondaryBlack">
       <SliderPrimitive.Range className="absolute h-full bg-main" />
     </SliderPrimitive.Track>
     <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-border dark:border-darkBorder bg-bg dark:bg-darkBg ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" />
