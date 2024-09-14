@@ -1,5 +1,19 @@
 # @omi3/site
 
+## 0.0.9
+
+### Patch Changes
+
+- 9f90909: This changeset includes minor updates and improvements to `@omi3/ui` package and `@omi3/site`:
+
+  - `@omi3/ui`: Minor enhancements and bug fixes to UI components.
+  - `@omi3/site`: Small improvements to the site's functionality and user interface.
+
+  These patch updates aim to enhance stability and user experience without introducing major new features or breaking changes.
+
+- Updated dependencies [9f90909]
+  - @omi3/ui@0.0.5
+
 ## 0.0.8
 
 ### Patch Changes

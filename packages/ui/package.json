@@ -1,7 +1,7 @@
 {
   "name": "@omi3/ui",
   "description": "Omi3 UI components",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "private": true,
   "author": {
