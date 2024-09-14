@@ -1,5 +1,24 @@
 # @omi3/site
 
+## 0.0.8
+
+### Patch Changes
+
+- ae33cb4: .
+
+  This changeset includes minor updates and improvements across multiple packages in the Omi3 project:
+
+  - @omi3/audio: Add classNames to the audio visualizer.
+  - @omi3/ui: Add DropdownMenu, Skeleton.
+  - @omi3/site: Add theme widget to the player.
+
+  These patch updates aim to enhance stability, performance, and user experience without introducing major new features or breaking existing functionality.
+
+- Updated dependencies [ae33cb4]
+  - @omi3/audio@0.0.5
+  - @omi3/utils@0.0.5
+  - @omi3/ui@0.0.4
+
 ## 0.0.7
 
 ### Patch Changes
