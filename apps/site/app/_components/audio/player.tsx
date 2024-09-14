@@ -6,6 +6,7 @@ import { playtime, seek } from '@omi3/utils';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useMemo } from 'react';
 
+import { ThemeWidget } from '../theme';
 import { audio } from '@/store';
 
 export function AudioPlayer() {
@@ -52,24 +53,25 @@ export function AudioPlayer() {
   const getPlayPauseIcon = useCallback(() => {
     switch (playbackState) {
       case AudioChannel.PlaybackState.PLAYING:
-        return <Icons.Pause />;
+        return <Icons.Pause className='fill-text' />;
       case AudioChannel.PlaybackState.LOADING:
         return <Icons.Loader2 className="animate-spin" />;
       default:
-        return <Icons.Play />;
+        return <Icons.Play className='fill-text' />;
     }
   }, [playbackState]);
 
   return (
     <Card className="w-full">
-      <CardHeader className="text-center">
+      <CardHeader className="flex flex-row justify-between items-center">
         <CardTitle>
-          Omi<span className="text-main">3</span> Player
+          Omi<span className="text-[#f50000]">3</span> Player
         </CardTitle>
+        <ThemeWidget/>
       </CardHeader>
       <CardContent>
         <div className="w-full">
-          <Visualizer analyser={analyser} width={300} height={150} />
+          <Visualizer analyser={analyser} width={300} height={150} className="border-2 border-border dark:border-darkBorder rounded-md" />
         </div>
         <Slider
           className="mt-4"
@@ -79,7 +81,7 @@ export function AudioPlayer() {
           onValueChange={audioHandlers.onValueChange}
           onValueCommit={audioHandlers.onValueCommit}
         />
-        <div className="text-text mt-2 flex w-full justify-between text-sm">
+        <div className="text-text dark:text-darkText mt-2 flex w-full justify-between text-sm">
           <span>{playtime(currentTime)}</span>
           <span>{playtime(duration)}</span>
         </div>

@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full" suppressHydrationWarning>
       <body className={cn(silk.variable, 'font-silk flex min-h-full flex-col antialiased')}>
         <Providers>
           <main className="flex flex-grow items-center justify-center p-5">{children}</main>
