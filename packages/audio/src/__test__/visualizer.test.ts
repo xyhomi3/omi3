@@ -130,10 +130,9 @@ describe('Visualizer', () => {
       expect.objectContaining({
         style: expect.objectContaining({
           backgroundColor: 'transparent',
-          border: '2px solid #333',
-          borderRadius: '4px',
           padding: '2px',
         }),
+        className: undefined,
       }),
       expect.anything(),
     );

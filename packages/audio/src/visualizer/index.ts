@@ -6,6 +6,7 @@ interface AudioVisualizerProps {
   height: number;
   backgroundColor?: string;
   lineColor?: string;
+  className?: string;
 }
 
 class Visualizer extends React.Component<AudioVisualizerProps> {
@@ -91,12 +92,10 @@ class Visualizer extends React.Component<AudioVisualizerProps> {
   }
 
   render() {
-    const { width, height } = this.props;
+    const { width, height, className } = this.props;
 
     const containerStyle: React.CSSProperties = {
       backgroundColor: 'transparent',
-      border: '2px solid #333',
-      borderRadius: '4px',
       padding: '2px',
     };
 
@@ -107,7 +106,7 @@ class Visualizer extends React.Component<AudioVisualizerProps> {
 
     return React.createElement(
       'div',
-      { style: containerStyle },
+      { style: containerStyle, className: className },
       React.createElement('canvas', {
         ref: this.canvasRef,
         width: width,
