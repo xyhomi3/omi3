@@ -6,8 +6,8 @@ import { playtime, seek } from '@omi3/utils';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useMemo } from 'react';
 
-import { audio } from '@/store';
 import { ThemeWidget } from '../theme';
+import { audio } from '@/store';
 
 export function AudioPlayer() {
   const audioState = useAtomValue(audio.stateAtom);
@@ -79,18 +79,17 @@ export function AudioPlayer() {
             aria-label="Visualiseur audio"
           />
         </div>
-        <Slider
-          className="mt-4"
-          value={[currentTime]}
-          max={duration}
-          step={0.1}
-          onValueChange={audioHandlers.onValueChange}
-          onValueCommit={audioHandlers.onValueCommit}
-          aria-label="Progression de la lecture"
-          aria-valuenow={currentTime}
-          aria-valuemin={0}
-          aria-valuemax={duration}
-        />
+        <div className="relative mt-4">
+          <Slider
+            className="mt-4"
+            value={[currentTime]}
+            max={duration}
+            step={0.1}
+            onValueChange={audioHandlers.onValueChange}
+            onValueCommit={audioHandlers.onValueCommit}
+          />
+          <span className="sr-only">Progression de la lecture : {playtime(currentTime)} sur {playtime(duration)}</span>
+        </div>
         <div className="mt-2 flex w-full justify-between text-sm">
           <span>{playtime(currentTime)}</span>
           <span>{playtime(duration)}</span>
@@ -106,17 +105,15 @@ export function AudioPlayer() {
           </Button>
           <div className="flex items-center gap-2">
             <span aria-hidden="true">{getVolumeIcon()}</span>
-            <Slider
-              className="w-32"
-              value={[localVolume]}
-              max={100}
-              step={1}
-              {...volumeHandlers}
-              aria-label="Contrôle du volume"
-              aria-valuenow={localVolume}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            />
+            <div className="relative w-32">
+              <Slider
+                value={[localVolume]}
+                max={100}
+                step={1}
+                {...volumeHandlers}
+              />
+              <span className="sr-only">Contrôle du volume : {localVolume}%</span>
+            </div>
           </div>
         </div>
       </CardContent>
