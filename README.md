@@ -10,8 +10,6 @@
 
 ---
 
-# Dev Branch
-
 `Omi3` is an open-source project focused on building audio processing and playback capabilities for web applications.
 
 ## Project Overview
@@ -44,7 +42,7 @@ The project is organized as follows:
 
 ## Getting Started
 
-1. Ensure you have `Node.js (>=18)` and `pnpm` installed.
+1. Ensure you have `Node.js (>=18)`, `pnpm`, and `make` installed.
 2. Clone the repository.
 3. Install dependencies:
    ```
@@ -54,6 +52,47 @@ The project is organized as follows:
    ```
    pnpm dev
    ```
+
+## Development Workflow
+
+We use a Makefile to streamline our development process. Here are the main commands:
+
+- Update your current branch or a specific branch with the latest changes from `main`:
+
+  ```
+  make update
+  ```
+
+  or
+
+  ```
+  make update BRANCH=your-branch-name
+  ```
+
+- Synchronize the `main` branch with `dev`:
+
+  ```
+  make sync-main
+  ```
+
+- Clean up local branches that have been merged:
+
+  ```
+  make clean
+  ```
+
+- Prune remote branches that no longer exist:
+
+  ```
+  make prune
+  ```
+
+- For more information on available commands:
+  ```
+  make help
+  ```
+
+Note: The main production branch is `main`. Always make sure you're updating from and merging into the correct branch for your specific task.
 
 ## Contributing
 
