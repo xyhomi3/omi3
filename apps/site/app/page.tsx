@@ -7,8 +7,10 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="w-full max-w-md">
-      <AudioPlayer />
-    </div>
+    <main className="flex flex-grow items-center justify-center p-5" role="main">
+      <div className="w-full max-w-md">
+        <AudioPlayer />
+      </div>
+    </main>
   );
 }

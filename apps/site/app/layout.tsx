@@ -1,10 +1,10 @@
 import '@omi3/ui/neobrutalism.css';
 
-import { silk } from '@omi3/ui';
-import { cn } from '@omi3/utils';
-import type { Metadata } from 'next';
 import { Footer } from './_components/layout/footer';
+import type { Metadata } from 'next';
 import { Providers } from './_providers';
+import { cn } from '@omi3/utils';
+import { silk } from '@omi3/ui';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://omi3.dev'),
@@ -29,9 +29,7 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <main className="flex flex-grow items-center justify-center p-5" tabIndex={-1} role="main">
-            {children}
-          </main>
+          {children}
           <Footer />
         </Providers>
       </body>
