@@ -9,25 +9,6 @@
 }
 
 body {
-  --sb-track-color: #ffffff;
-  --sb-thumb-color: #000000;
-  @apply text-text dark:text-darkText;
+  @apply text-text dark:text-darkText bg-bg dark:bg-darkBg;
 }
 
-body::-webkit-scrollbar {
-  width: 10px;
-}
-
-body::-webkit-scrollbar-track {
-  background: var(--sb-track-color);
-}
-
-body::-webkit-scrollbar-thumb {
-  background: var(--sb-thumb-color);
-}
-
-@supports not selector(::-webkit-scrollbar) {
-  body {
-    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
-  }
-}

@@ -1,9 +1,9 @@
-import ratio from '@tailwindcss/aspect-ratio';
-import forms from '@tailwindcss/forms';
-import typography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
 import animate from 'tailwindcss-animate';
+import forms from '@tailwindcss/forms';
 import radix from 'tailwindcss-radix';
+import ratio from '@tailwindcss/aspect-ratio';
+import typography from '@tailwindcss/typography';
 
 type ThemeConfig = NonNullable<Config['theme']>;
 type StyleConfig = Partial<ThemeConfig>;
@@ -60,6 +60,7 @@ const styles: Record<'neobrutalism' | 'shadcn', StyleConfig> = {
       darkText: '#eeefe9',
       darkBorder: '#000',
       secondaryBlack: '#1b1b1b', // opposite of plain white, not used pitch black because borders and box-shadows are that color
+      secondaryWhite: '#fafafa',
     },
   },
   shadcn: {

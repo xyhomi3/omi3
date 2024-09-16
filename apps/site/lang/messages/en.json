@@ -1,0 +1,61 @@
+{
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, fr {French} en {English} other {Unknown}}"
+  },
+
+  "Pages": {
+    "notFound": {
+      "title": "Page not found",
+      "description": "Please double-check the browser address bar or use the navigation to go to a known page.",
+      "meta": {
+        "title": "Page not found",
+        "description": "Sorry, we couldn't find the page you're looking for!"
+      }
+    },
+    "error": {
+      "description": "<p>We've unfortunately encountered an error.</p><p>You can try to <retry>reload</retry> the page you were visiting.</p>",
+      "title": "Something went wrong!"
+    },
+    "home": {
+      "meta": {
+        "title": "Home",
+        "description": "Home"
+      }
+    },
+    "player": {
+      "title": "Audio Player",
+      "description": "Audio Player",
+      "meta": {
+        "title": "Audio Player",
+        "description": "Audio Player"
+      }
+    }
+  },
+
+  "Layout": {
+    "locale": {
+      "title": "Omi3",
+      "description": "Omi3 is an open-source project focused on building audio processing and playback capabilities for web applications."
+    }
+  },
+  "Components": {
+    "audio": {
+      "player": {
+        "title": "Audio Player",
+        "visualizer": "Audio visualizer",
+        "currentValue": "Current value: {value}",
+        "playbackProgress": "Playback progress: {current} of {total}",
+        "pause": "Pause",
+        "play": "Play",
+        "volumeControl": "Volume control: {volume}%",
+        "pressPlayMessage": "Please press play to start playback."
+      }
+    },
+    "navbar": {
+      "items": {
+        "home": "Home"
+      }
+    }
+  }
+}
