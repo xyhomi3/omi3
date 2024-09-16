@@ -2,8 +2,10 @@
   "name": "@omi3/tailwind",
   "description": "Tailwind Config",
   "version": "0.0.2",
-  "private": true,
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "tailwind.config.ts",
   "types": "tailwind.config.ts",
   "exports": {

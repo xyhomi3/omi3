@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["NODE_ENV", "CI", "VERCEL"],
+  "globalEnv": ["NODE_ENV", "CI", "VERCEL", "NEXT_PUBLIC_MAIN_DOMAIN"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
