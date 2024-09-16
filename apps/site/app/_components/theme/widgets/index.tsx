@@ -1,3 +1,5 @@
+"use client"
+
 import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, Icons } from '@omi3/ui';
 
 import { memo } from 'react';
@@ -12,7 +14,7 @@ export const ThemeWidget = memo(function ThemeWidget() {
       <DropdownMenuTrigger asChild>
         <Button size="icon" variant="noShadow" data-umami-event="theme-toggle" aria-label="Toggle theme">
           {!isMounted ? (
-            <Icons.Loader2 className="h-4 w-4 animate-spin" />
+            <Icons.Loader2 className="h-4 w-4 animate-spin text-text dark:text-darkText/50" />
           ) : (
             <>
               <Icons.Moon className={getIconClassName('dark')} />

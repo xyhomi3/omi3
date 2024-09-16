@@ -31,9 +31,8 @@ export function ThemeToggler() {
         return (
           <Button
             key={name}
-            className={`w-full p-0 transition-colors duration-200 ${
-              isActive ? 'dark:bg-main bg-white' : 'bg-bg hover:bg-bg/80 dark:bg-darkBg dark:hover:bg-darkBg/80'
-            }`}
+            className={`p-0 transition-colors duration-200 ${isActive && 'dark:bg-main bg-bg'}`}
+            size="icon"
             variant={isActive ? 'noShadow' : 'neutral'}
             onClick={() => setTheme(name)}
             title={label}
