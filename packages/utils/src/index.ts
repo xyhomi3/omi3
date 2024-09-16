@@ -6,3 +6,5 @@ export * from './functions/seek';
 export * from './functions/shuffle';
 // Constants
 export * from './constants/audio';
+export * from "./constants/domain";
+
