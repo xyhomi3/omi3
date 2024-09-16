@@ -1,15 +1,16 @@
 'use client';
 
 import { AudioChannel, Visualizer } from '@omi3/audio';
-import { Button, Card, CardContent, CardHeader, CardTitle, Icons, Slider } from '@omi3/ui';
+import { Button, Card, CardContent, Icons, Slider } from '@omi3/ui';
 import { playtime, seek } from '@omi3/utils';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useMemo } from 'react';
 
-import { ThemeWidget } from '../theme';
 import { audio } from '@/store';
+import { useTranslations } from 'next-intl';
 
 export function AudioPlayer() {
+  const t = useTranslations('Components.audio.player');
   const audioState = useAtomValue(audio.stateAtom);
   const analyser = useAtomValue(audio.analyserAtom);
   const togglePlayPause = useSetAtom(audio.togglePlayPauseAtom);
@@ -61,28 +62,31 @@ export function AudioPlayer() {
     }
   }, [playbackState]);
 
-  const getThumbProps = useCallback((value: number) => ({
-    'aria-label': `Current value: ${value}`,
-    title: `Current value: ${value}`,
-  }), []);
+  const getThumbProps = useCallback(
+    (value: number) => ({
+      'aria-label': t('currentValue', { value }),
+      title: t('currentValue', { value }),
+    }),
+    [t],
+  );
 
   return (
     <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>
-          Omi<span className="text-[#ff6b6b]">3</span> Player
-        </CardTitle>
-        <ThemeWidget />
-      </CardHeader>
-      <CardContent>
+      <CardContent className="pt-5">
         <div className="w-full">
-          <Visualizer
-            analyser={analyser}
-            width={300}
-            height={150}
-            className="border-border dark:border-darkBorder rounded-base border-2"
-            aria-label="Visualiseur audio"
-          />
+          {isInitialized ? (
+            <Visualizer
+              analyser={analyser}
+              width={300}
+              height={150}
+              className="border-border dark:border-darkBorder rounded-base border-2"
+              aria-label={t('visualizer')}
+            />
+          ) : (
+            <div className="border-border dark:border-darkBorder rounded-base bg-bg dark:bg-darkBg flex h-[238px] w-full flex-col items-center justify-center border-2 p-4 text-center text-sm">
+              <p>{t('pressPlayMessage')}</p>
+            </div>
+          )}
         </div>
         <div className="relative mt-4">
           <Slider
@@ -92,7 +96,7 @@ export function AudioPlayer() {
             step={0.1}
             onValueChange={audioHandlers.onValueChange}
             onValueCommit={audioHandlers.onValueCommit}
-            aria-label={`Playback progress: ${playtime(currentTime)} of ${playtime(duration)}`}
+            aria-label={t('playbackProgress', { current: playtime(currentTime), total: playtime(duration) })}
             thumbProps={getThumbProps(currentTime)}
           />
         </div>
@@ -105,7 +109,7 @@ export function AudioPlayer() {
             size="icon"
             onClick={handlePlay}
             disabled={playbackState === AudioChannel.PlaybackState.LOADING}
-            aria-label={playbackState === AudioChannel.PlaybackState.PLAYING ? 'Pause' : 'Lecture'}
+            aria-label={playbackState === AudioChannel.PlaybackState.PLAYING ? t('pause') : t('play')}
           >
             {getPlayPauseIcon()}
           </Button>
@@ -117,7 +121,7 @@ export function AudioPlayer() {
                 max={100}
                 step={1}
                 {...volumeHandlers}
-                aria-label={`Volume control: ${localVolume}%`}
+                aria-label={t('volumeControl', { volume: localVolume })}
                 thumbProps={getThumbProps(localVolume)}
               />
             </div>

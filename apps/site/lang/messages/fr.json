@@ -1,0 +1,61 @@
+{
+  "LocaleSwitcher": {
+    "label": "Changer de langue",
+    "locale": "{locale, select, fr {Français} en {Anglais} other {Unknown}}"
+  },
+
+  "Pages": {
+    "notFound": {
+      "title": "Page non trouvée",
+      "description": "Veuillez vérifier l'adresse dans la barre de navigation ou utiliser le menu pour aller sur une page connue.",
+      "meta": {
+        "title": "Page non trouvée",
+        "description": "Désolé, nous n'avons pas pu trouver la page que vous cherchez !"
+      }
+    },
+    "error": {
+      "description": "<p>Nous avons regrettablement rencontré une erreur.</p><p>Vous pouvez essayer de <retry>recharger</retry> la page que vous visitiez.</p>",
+      "title": "Quelque chose a mal tourné !"
+    },
+    "home": {
+      "meta": {
+        "title": "Accueil",
+        "description": "Accueil"
+      }
+    },
+    "player": {
+      "title": "Lecteur audio",
+      "description": "Lecteur audio",
+      "meta": {
+        "title": "Lecteur audio",
+        "description": "Lecteur audio"
+      }
+    }
+  },
+
+  "Layout": {
+    "locale": {
+      "title": "Omi3",
+      "description": "Omi3 est un projet open-source axé sur le développement de capacités de traitement et de lecture audio pour les applications web."
+    }
+  },
+  "Components": {
+    "audio": {
+      "player": {
+        "title": "Lecteur Audio",
+        "visualizer": "Visualiseur audio",
+        "currentValue": "Valeur actuelle : {value}",
+        "playbackProgress": "Progression de la lecture : {current} sur {total}",
+        "pause": "Pause",
+        "play": "Lecture",
+        "volumeControl": "Contrôle du volume : {volume}%",
+        "pressPlayMessage": "Veuillez appuyer sur play pour commencer la lecture."
+      }
+    },
+    "navbar": {
+      "items": {
+        "home": "Accueil"
+      }
+    }
+  }
+}
