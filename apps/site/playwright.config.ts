@@ -22,7 +22,6 @@ export default defineConfig({
     baseURL: `http://127.0.0.1:${PORT}`,
     trace: 'on-first-retry',
   },
-
   /* Configure projects for major browsers */
   projects: [
     {
@@ -48,7 +47,8 @@ export default defineConfig({
 
   /* Run local server before starting the tests */
   webServer: {
-    command: `pnpm build && PORT=${PORT} pnpm start`,
+    command: `pnpm build && PORT=${PORT} VERCEL=true pnpm start`,
+    timeout: 5 * 60 * 1000, // 5 minutes
     port: PORT,
     stdout: 'pipe',
     reuseExistingServer: !process.env.CI,
