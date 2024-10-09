@@ -1,5 +1,12 @@
 # @omi3/site
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [d26435b]
+  - @omi3/ui@0.0.7
+
 ## 0.0.10
 
 ### Patch Changes
