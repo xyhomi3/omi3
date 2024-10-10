@@ -1,5 +1,11 @@
 # @omi3/ui
 
+## 0.0.8
+
+### Patch Changes
+
+- ba17827: optimize storybook configs
+
 ## 0.0.7
 
 ### Patch Changes
