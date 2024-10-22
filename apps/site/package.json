@@ -16,7 +16,7 @@
     "@omi3/ui": "workspace:*",
     "@omi3/utils": "workspace:*",
     "@vercel/analytics": "^1.3.1",
-    "jotai": "^2.9.3",
+    "jotai": "^2.10.0",
     "next": "latest",
     "next-intl": "latest",
     "next-themes": "^0.3.0",
